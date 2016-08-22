@@ -124,7 +124,7 @@ MM"-----------------";
 #undef MM
 #define MM "\033[35C"
 static const char gJoy[] =
-"\033[3;1H"cBROWN
+"\033[3;1H\033[33m"
 MM"             .-\"\"-._\n"
 MM"            / ___/  \\         _&_\n"
 MM"      _.--\"\"|/    `\\|        // \\\\ \n"

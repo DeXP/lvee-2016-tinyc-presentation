@@ -85,11 +85,24 @@ int myshowcursor(int fd){
   return write_cstring(fd, "\033[?25h");
 }
 
+long mytime(){
+  long t;
+  syscall1(__NR_time, &t);
+  return t;
+}
+
 void myexit(int status){
-  /* Dirty hack to remove warnings */
-  open2(0, 0);
-  close(0);
   nolibc_exit(status);
+}
+
+/* Functions, do not used in presentation engine. 
+ * Needed to remove compiler warnings */
+int myclose(int fd){
+  return close(fd);
+}
+
+int myopen2(const char *pathname, int flags){
+  return open2(pathname, flags);
 }
 
 int myexecve(const char *filename, char *const argv[], char *const envp[]){

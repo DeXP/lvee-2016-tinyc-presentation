@@ -32,6 +32,18 @@
 #define MY_INTENSE_FG 1
 #define MY_INTENSE_BG 5
 
+/* Code highlight colors */
+#if defined(MY_CODE_HIGHLIGHT)
+	#define CT cBROWN
+	#define CI cGRAY
+	#define CS cCYAN
+	#define CSs CS"\""
+	#define CSe "\""CT
+	#define CR cRED
+	#define CP cGREEN
+	#define CC cBLACK
+#endif
+
 
 #define MY_KEY_UP 65
 #define MY_KEY_LEFT 68
@@ -51,8 +63,6 @@ int mystrlen(const char *str);
 void myprintf(int fd, char* format, ...);
 int myclearscreen(int fd);
 void myexit(int status);
-int myexecve(const char *filename, char *const argv[], char *const envp[]);
-/*myTermSize mygetsizeterm(int fd);*/
 int mygetsizeterm(int fd, const struct winsize *ws);
 int mytcgetattr(int fd, struct termios *t);
 int mytcsetattr(int fd, int opt, const struct termios *t);
@@ -62,5 +72,10 @@ int mymovecursor(int fd, int row, int col);
 void mysetcolor(int fd, int param, int fg, int bg);
 int myhidecursor(int fd);
 int myshowcursor(int fd);
+long mytime();
+int myclose(int fd);
+int myopen2(const char *pathname, int flags);
+int myexecve(const char *filename, char *const argv[], char *const envp[]);
+
 
 #endif /* MYLIBC_H */

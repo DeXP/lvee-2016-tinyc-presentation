@@ -1,26 +1,18 @@
+#define MY_CODE_HIGHLIGHT 1
 #include "mylibc.h"
 #include "media.h"
 
 const char colorSchemes[][6] = {
 	/* Main color param, fg, bg; decor param, fg, bg */ 
+	#define C_BLACK 0
 	{MY_INTENSE_FG, MY_GRAY + MY_FG, MY_BLACK + MY_BG, MY_DEF, MY_GREEN + MY_FG, MY_BLACK + MY_BG},
+	#define C_PASCAL 1
 	{MY_INTENSE_FG, MY_BROWN + MY_FG, MY_BLUE + MY_BG, MY_DEF, MY_GRAY + MY_FG, MY_BLUE + MY_BG},
+	#define C_WHITE 2
 	{MY_DEF, MY_BLACK + MY_FG, MY_GRAY + MY_BG, MY_DEF, MY_GREEN + MY_FG, MY_GRAY + MY_BG},
+	#define C_ERROR 3
 	{MY_INTENSE_FG, MY_GRAY + MY_FG, MY_RED + MY_BG, MY_INTENSE_FG, MY_BROWN + MY_FG, MY_RED + MY_BG}
 };
-#define C_BLACK 0
-#define C_PASCAL 1
-#define C_WHITE 2
-#define C_ERROR 3
-
-#define CT cBROWN
-#define CI cGRAY
-#define CS cCYAN
-#define CSs CS"\""
-#define CSe "\""CT
-#define CR cRED
-#define CP cGREEN
-#define CC cBLACK
 
 typedef struct { 
 	char* title;
@@ -30,6 +22,8 @@ typedef struct {
 	int picSize;
 } myFrame;
 
+/* Presentations starts here */
+#define MY_SHOW_TIMER 1
 #define TOP_BANNER "{  LVEE 2016  }"
 #define BOTTOM_BANNER "[ DeXPeriX a.k.a. Hrabrov Dmitry ]"
 
@@ -172,12 +166,13 @@ CS"   va_end"CT"(arg);\n"
 	"Что это даёт?",
 " 1) Цвета\n"
 " 2) Размеры и режимы терминала\n"
-" 3) Управление курсором\n"
-" 4) Обработка клавиатуры\n"
+" 3) Обработка клавиатуры\n"
+" 4) Управление курсором\n"
 " 5) Юникод (частично)\n"
-" 6) Файлы и папки\n"
-" 7) sbrk / mmap\n"
-" 8) fork\n"
+" 6) Время и таймеры\n"
+" 7) Файлы и папки\n"
+" 8) sbrk / mmap\n"
+" 9) fork\n"
 "\n"
 " Пример: данная презентация",
 	C_BLACK, gJoy, sizeof(gJoy)
@@ -231,9 +226,10 @@ char getKey(int fd){
 	return ch;
 }
 
-void draw_frame(int num){
+void draw_frame(int num, long startTime){
 	char buf[2048];	int i;
 	struct winsize sz;
+	long curTime = mytime() - startTime;
 	int colId = frames[num].colorSchemeId;
 	int cparam = colorSchemes[colId][0];
 	int cfg = colorSchemes[colId][1];
@@ -244,13 +240,14 @@ void draw_frame(int num){
 
 	mygetsizeterm(MY_STD_IN, &sz);
 	myfillterm(MY_STD_OUT, dparam, dfg, dbg);
-	for(i=0; i<3*sz.ws_col; i++)/* buf[i] = '-';*/
+	for(i=0; i<3*sz.ws_col; i++)
         switch( i % 3 ){
+			/* Long dash symbol */
             case 0: buf[i] = 226; break;
             case 1: buf[i] = 148; break;
             case 2: buf[i] = 128; break;
         }
-	/* top 2 lines*/
+	/* top 1 line */
 	mymovecursor(MY_STD_OUT, 2, 1);
 	mywritebuf(MY_STD_OUT, buf, 3*sz.ws_col);
 	/* bottom 1 line */
@@ -264,9 +261,15 @@ void draw_frame(int num){
 	/* Bottom right banner */
 	mymovecursor(MY_STD_OUT, sz.ws_row-1, sz.ws_col - mystrlen(BOTTOM_BANNER) - 2 );
 	mywritebuf(MY_STD_OUT, BOTTOM_BANNER, mystrlen(BOTTOM_BANNER) );
-	/* Pages */
+	/* Pages + Timer */
 	mymovecursor(MY_STD_OUT, sz.ws_row-1, 5 );
+#if defined(MY_SHOW_TIMER) && MY_SHOW_TIMER
+	myprintf(MY_STD_OUT, " %d/%d [ %dm %ds ] ", num+1, framesCount, 
+			curTime/60 % 60, curTime % 60 );
+#else
 	myprintf(MY_STD_OUT, " %d/%d ", num+1, framesCount);
+	(void)curTime;
+#endif
 
 	/* restore params */
 	mymovecursor(MY_STD_OUT, 1, 1);
@@ -276,20 +279,23 @@ void draw_frame(int num){
 	if( frames[num].pic != 0 ){
 		mywritebuf(MY_STD_OUT, frames[num].pic, frames[num].picSize);
 	}
+
+	/* Texts */
+	mymovecursor(MY_STD_OUT, 2, 5);
 	mysetcolor(MY_STD_OUT, cparam, cfg, cbg);
+	myprintf(MY_STD_OUT, "[ %s ]", frames[num].title);
+	mymovecursor(MY_STD_OUT, 5, 1);
+	mysetcolor(MY_STD_OUT, cparam, cfg, cbg);
+	mywritebuf(MY_STD_OUT, frames[num].text, mystrlen(frames[num].text) );
 }
 
 void _start(void){
-	char key = 0;
+	long startTime = mytime();
+	char key = 0;	
 	int num = 0;
 	myhidecursor(MY_STD_OUT);
 	while( num < framesCount ){
-		draw_frame(num);	
-		mymovecursor(MY_STD_OUT, 2, 5);
-		myprintf(MY_STD_OUT, "[ %s ]", frames[num].title);
-		mymovecursor(MY_STD_OUT, 5, 1);
-		myprintf(MY_STD_OUT, "%s\n\n", frames[num].text);
-
+		draw_frame(num, startTime);
 		key = getKey(MY_STD_IN);
 		if( (key == '4') || /* for disabled numpad */
 			(key == MY_KEY_UP) || 
