@@ -59,7 +59,7 @@ MM"         ^  ^  ^       _H_ \\";
 
 #undef MM
 #define MM "\033[45C"
-static const char gBird[] =
+static const char gBirdAndArrow[] =
 "\033[5;1H\033[35m"
 MM"        .---.        .-----------\n"
 MM"       /     \\  __  /    ------\n"
@@ -70,7 +70,16 @@ MM"   // /   /  /`    '--\n"
 MM"  //          //..\\\\\n"
 MM"=============UU====UU============\n"
 MM"             '//||\\`\n"
-MM"               ''``";
+MM"               ''``\n"
+#undef MM
+#define MM "\033[32C"
+"\033[17;1H\033[30m"
+MM"       .\n"
+MM"     .;;............ ..\n"
+MM"   .;;;;::::::::::::..\n"
+MM"    ':;;:::::::::::: . .  AMC\n"
+MM"      ':";
+
 
 
 #undef MM

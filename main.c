@@ -110,7 +110,7 @@ CI"    while"CT"( count"CI"--"CT" ){\n"
 CI"    return"CT" dest;\n"
 " }"
 , 
-	C_PASCAL, gBird, sizeof(gBird)
+	C_PASCAL, gBirdAndArrow, sizeof(gBirdAndArrow)
 },
 
 
@@ -195,7 +195,7 @@ CS"   va_end"CT"(arg);\n"
 {
 	"Спасибо!",
 " Слушателям спасибо за внимание!\n"
-" Линусу Торвальдсу спасибо за Linux.\n"
+" Линусу Торвальдсу за GNU/Linux.\n"
 " ASCII-художникам, работы которых использованы в презентации.\n"
 " Игре \"Winter Novel\", за идеи. Не забудьте купить её в Steam!\n"
 " Microsoft .... данная презентация написана в Windows 10! ;-)\n"
@@ -256,11 +256,11 @@ void draw_frame(int num, long startTime){
 
 	mysetcolor(MY_STD_OUT, cparam, cfg, cbg);
 	/* Top right banner */
-	mymovecursor(MY_STD_OUT, 2, sz.ws_col - mystrlen(TOP_BANNER) - 2 );
-	mywritebuf(MY_STD_OUT, TOP_BANNER, mystrlen(TOP_BANNER) );
+	mymovecursor(MY_STD_OUT, 2, sz.ws_col - sizeof(TOP_BANNER) - 1 );
+	mywritebuf(MY_STD_OUT, TOP_BANNER, sizeof(TOP_BANNER) - 1 );
 	/* Bottom right banner */
-	mymovecursor(MY_STD_OUT, sz.ws_row-1, sz.ws_col - mystrlen(BOTTOM_BANNER) - 2 );
-	mywritebuf(MY_STD_OUT, BOTTOM_BANNER, mystrlen(BOTTOM_BANNER) );
+	mymovecursor(MY_STD_OUT, sz.ws_row-1, sz.ws_col - sizeof(BOTTOM_BANNER) - 1 );
+	mywritebuf(MY_STD_OUT, BOTTOM_BANNER, sizeof(BOTTOM_BANNER) - 1 );
 	/* Pages + Timer */
 	mymovecursor(MY_STD_OUT, sz.ws_row-1, 5 );
 #if defined(MY_SHOW_TIMER) && MY_SHOW_TIMER
