@@ -5,6 +5,8 @@ This is my presentation for Linux Vacation / Eastern Europe 2016. This work show
 
 ![LVEE 2016 tinyc screenshot](https://github.com/DeXP/lvee-2016-tinyc-presentation/raw/master/screenshot.png "Screenshot")
 
+The codes are not perfect and example only.
+
 Language: **russian**.
 
 
@@ -38,7 +40,7 @@ Hotkeys
 License
 -----------
 
-CC0 - Creative Commons 0 - use it, as you wish.
+CC0 - Creative Commons 0 - free for any use.
 
 
 Links

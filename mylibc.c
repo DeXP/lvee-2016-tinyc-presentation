@@ -41,7 +41,7 @@ int mymovecursor(int fd, int row, int col){
   return row+col;
 }
 
-int mystrlen(const char *str){
+unsigned int mystrlen(const char *str){
   return nolibc_strlen(str);
 }
 

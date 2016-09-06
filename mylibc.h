@@ -59,7 +59,7 @@
 
 char mygetchar(int fd);
 int myputchar(int fd, char c);
-int mystrlen(const char *str);
+unsigned int mystrlen(const char *str);
 void myprintf(int fd, char* format, ...);
 int myclearscreen(int fd);
 void myexit(int status);
